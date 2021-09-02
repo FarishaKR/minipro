@@ -1,79 +1,103 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Stopwatch</title>
-        <link rel="stylesheet" href="stopwatch.css">
-    </head>
-    <body>
-
-        <div class="stopwatch">
-            <div class="controls">
-                <button class="start">Start</button>
-                <button class="stop">Stop</button>
-                <button class="reset">Reset</button>
-            </div>
-            <div class="display">
-                <span class="minutes">00</span><span class="seconds">00</span><span class="centiseconds">00</span>
-            </div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>StopWatch</title>
+  </head>
+  <body>
+    
+    <div id="conatiner">
+      <div id="watch">
+        <p id="name"></p>
+        <p><font color="white">
+          <span id="hr">00</span>:<span id="min">00</span>:<span id="sec"
+            >00</span
+          >:<span id="msec">00</span></font>
+        </p>
+        <div id="btn">
+          <button id="start">Start</button>
+          <button id="stop">Stop</button>
+          <button id="reset">Reset</button>
         </div>
+      </div>
+      
+    </div>
+  </body>
+  <script>
+    let ms = 0,
+  s = 0,
+  m = 0,
+  hr = 0;
 
-        <script>var ss = document.getElementsByClassName('stopwatch');
+let appendMs = document.getElementById("msec");
+let appendSec = document.getElementById("sec");
+let appendMin = document.getElementById("min");
+let appendHr = document.getElementById("hr");
 
-[].forEach.call(ss, function (s) {
-    var currentTimer = 0,
-        interval = 0,
-        lastUpdateTime = new Date().getTime(),
-        start = s.querySelector('button.start'),
-        stop = s.querySelector('button.stop'),
-        reset = s.querySelector('button.reset'),
-        mins = s.querySelector('span.minutes'),
-        secs = s.querySelector('span.seconds'),
-        cents = s.querySelector('span.centiseconds');
+let buttonStart = document.getElementById("start");
+let buttonStop = document.getElementById("stop");
+let buttonReset = document.getElementById("reset");
 
-    start.addEventListener('click', startTimer);
-    stop.addEventListener('click', stopTimer);
-    reset.addEventListener('click', resetTimer);
+let interval;
 
-    function pad (n) {
-        return ('00' + n).substr(-2);
+function timer() {
+  ms++;
+  if (ms > 9) {
+    appendMs.innerHTML = ms;
+  } else {
+    appendMs.innerHTML = "0" + ms;
+  }
+  if (ms > 99) {
+    s++;
+    ms = 0;
+    ms++;
+    if (s > 9) {
+      appendSec.innerHTML = s;
+    } else {
+      appendSec.innerHTML = "0" + s;
     }
-
-    function update () {
-        var now = new Date().getTime(),
-            dt = now - lastUpdateTime;
-
-        currentTimer += dt;
-
-        var time = new Date(currentTimer);
-
-        mins.innerHTML = pad(time.getMinutes());
-        secs.innerHTML = pad(time.getSeconds());
-        cents.innerHTML = pad(Math.floor(time.getMilliseconds() / 10));
-
-        lastUpdateTime = now;
-    }
-
-    function startTimer () {
-        if (!interval) {
-            lastUpdateTime = new Date().getTime();
-            interval = setInterval(update, 1);
+    if (s > 59) {
+      s = 0;
+      m++;
+      s++;
+      if (m > 9) {
+        appendMin.innerHTML = m;
+      } else {
+        appendMin.innerHTML = "0" + m;
+      }
+      if (m > 59) {
+        m = 0;
+        hr++;
+        m++;
+        if (hr > 9) {
+          appendHr.innerHTML = hr;
+        } else {
+          appendHr.innerHTML = "0" + hr;
         }
+      }
     }
+  }
+}
+buttonStart.onclick = function () {
+  interval = setInterval(timer);
+};
+buttonStop.onclick = function () {
+  clearInterval(interval);
+};
 
-    function stopTimer () {
-        clearInterval(interval);
-        interval = 0;
-    }
+buttonReset.onclick = function () {
+  ms = 0;
+  s = 0;
+  m = 0;
+  hr = 0;
+  appendMs.innerHTML = "00";
+  appendSec.innerHTML = "00";
+  appendMin.innerHTML = "00";
+  appendHr.innerHTML = "00";
+};
 
-    function resetTimer () {
-        stopTimer();
-
-        currentTimer = 0;
-
-        mins.innerHTML = secs.innerHTML = cents.innerHTML = pad(0);
-    }
-});
-      </script>
-    </body>
+  </script>
 </html>
